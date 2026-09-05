@@ -1,0 +1,17 @@
+{
+	auto_https off
+	admin off
+}
+
+:8080 {
+	handle_path /healthz {
+		respond "ok" 200
+	}
+
+	import /etc/caddy/auth.caddy
+
+	reverse_proxy 127.0.0.1:3000 {
+		lb_try_duration 30s
+		lb_try_interval 250ms
+	}
+}

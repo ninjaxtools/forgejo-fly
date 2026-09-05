@@ -1,0 +1,49 @@
+app = '__APP_NAME__'
+primary_region = '__PRIMARY_REGION__'
+swap_size_mb = 1024
+
+[build]
+  dockerfile = 'Dockerfile'
+
+[env]
+  GITEA__default__APP_NAME = 'Forgejo'
+  GITEA__default__APP_SLOGAN = 'Self-hosted Git service'
+  GITEA__log__REQUEST_ID_HEADERS = 'Fly-Client-IP'
+  GITEA__other__SHOW_FOOTER_VERSION = 'false'
+  GITEA__packages__ENABLED = 'true'
+  GITEA__security__COOKIE_REMEMBER_NAME = 'forgejo_remember'
+  GITEA__security__INSTALL_LOCK = 'true'
+  GITEA__security__LOGIN_REMEMBER_DAYS = '10'
+  GITEA__security__REVERSE_PROXY_LIMIT = '2'
+  GITEA__server__DISABLE_SSH = 'true'
+  GITEA__server__HTTP_ADDR = '127.0.0.1'
+  GITEA__server__LANDING_PAGE = 'explore'
+  GITEA__server__OFFLINE_MODE = 'false'
+  GITEA__server__ROOT_URL = 'https://__APP_NAME__.fly.dev/'
+  GITEA__server__START_SSH_SERVER = 'false'
+  GITEA__service__DISABLE_REGISTRATION = 'true'
+  GITEA__service__REQUIRE_SIGNIN_VIEW = '__REQUIRE_SIGNIN_VIEW__'
+  GITEA__session__COOKIE_NAME = 'forgejo_session'
+  GITEA__session__SAME_SITE = 'strict'
+
+[[mounts]]
+  source = 'data'
+  destination = '/data'
+  initial_size = '10gb'
+  snapshot_retention = 20
+  auto_extend_size_threshold = 80
+  auto_extend_size_increment = '5gb'
+  auto_extend_size_limit = '50gb'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+[[vm]]
+  memory = '2048mb'
+  cpu_kind = 'shared'
+  cpus = 4
